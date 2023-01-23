@@ -1,4 +1,6 @@
 <%- include ("partials/header") -%>
 <h1><%= tatle %></h1>
-<p><%= conta %></p>
+<%for(var i = 0 ; i < conta.length;i++){%>
+    <p>=> <%= conta[i] %></p>
+<%};%>
 <%- include ("partials/footer") -%>

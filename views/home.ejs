@@ -3,8 +3,10 @@
 <h1>Home</h1>
 <p><%= para %></p>
 <%post.forEach(function(data){%>
-    <h1><a href="posts/<%= data.title %>"><%= data.title %></a></h1>
-    <p><%= data.content %></p>
+    <h1><a href="posts/<%= data.title %>"><%= data.title %></a> Has to do</h1>
+    <%for(var i = 0 ; i < data.content.length;i++){%>
+        <p>=> <%= data.content[i] %></p>
+    <%};%>
 <%});%>
 
 <%- include ('partials/footer')-%>

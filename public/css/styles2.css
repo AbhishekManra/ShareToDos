@@ -94,3 +94,9 @@ footer {
   color: rgba(0, 0, 0, 0.5);
   text-align: center;
 }
+.bottomform{
+  position: fixed;
+  bottom: 0px;
+  background: white;
+  border-radius: 30px;
+}

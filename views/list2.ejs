@@ -1,9 +1,7 @@
 <%- include("partials/header2") -%>
 
   <div class="box" id="heading">
-    <form action="/" method="post">
-      <input type="text" class="h1" name="h1inp" autocomplete="off">
-    </form>
+    <h1> <%= listTitle %> </h1>
   </div>
 
   <div class="box">
@@ -14,9 +12,13 @@
       </div>
       <% } %>
 
-      <form class="item" action="/" method="post">
+      <form class="item" action="/todopost" method="post">
         <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
         <button type="submit" name="list">+</button>
+      </form>
+      <form action="/" method="post" class="bottomform">
+        <input type="text" placeholder="Enter your name" autocomplete="off" name="name_inp">
+        <button type="submit">ok</button>
       </form>
   </div>
 
