@@ -1,12 +1,13 @@
 
 <%- include ('partials/header')-%>
-<h1>Home</h1>
-<p><%= para %></p>
-<%post.forEach(function(data){%>
-    <h1><a href="posts/<%= data.title %>"><%= data.title %></a> Has to do</h1>
-    <%for(var i = 0 ; i < data.content.length;i++){%>
-        <p>=> <%= data.content[i] %></p>
-    <%};%>
-<%});%>
 
+<%post.forEach((data)=>{%>
+    <div class="box">
+    <h1><a href="/<%= data.name %>"><%= data.name %></a> Has to do</h1>
+        <%data.item.forEach((result)=>{%>
+            <p>=> <%= result %></p>
+            <%});%>
+        </div>
+            <%});%>
+    
 <%- include ('partials/footer')-%>

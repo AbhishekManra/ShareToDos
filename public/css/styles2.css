@@ -51,7 +51,7 @@ p {
   color: #00204a;
 }
 
-form {
+#farm {
   text-align: center;
   margin-left: 20px;
 }
@@ -96,7 +96,16 @@ footer {
 }
 .bottomform{
   position: fixed;
-  bottom: 0px;
   background: white;
   border-radius: 30px;
+}
+#custom{
+  margin-top: 20%;
+}
+a{
+  position: relative;
+  top: 20px;
+  left: 20px;
+  color: #1abc9c;
+
 }

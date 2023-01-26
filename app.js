@@ -1,62 +1,124 @@
-//jshint esversion:6
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
-const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
-const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
-const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
+const mongoose = require("mongoose");
+
+function reload(){
+  window.location.reload();
+};
 
 const app = express();
-const items = [];
-const posts = [];
+
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-app.get("/",(req,res)=>{
-    res.render("home",{para : homeStartingContent , post : posts });
+mongoose.connect('mongodb://127.0.0.1:27017/DBlogToDo');
+
+const arr = [];
+
+const listschema = mongoose.Schema({
+  name : String,
+  item : [String] // it became an array of object type of normalSchema 
 });
-app.get("/about",(req,res)=>{
-  res.render("about",{para : aboutContent });
-});
-app.get("/contact",(req,res)=>{
-  res.render("contact",{para : contactContent });
-});
-app.get("/compose",(req,res)=>{
-  res.render("compose")
-});
-app.get("/posts/:topic",(req,res)=>{
-  const b = _.lowerCase(req.params.topic);
-  posts.forEach(element => {
-    const a = _.lowerCase(element.title);
-    if(a === b){
-      res.render("post",{tatle : element.title , conta : element.content })
+
+const List = mongoose.model("List",listschema);
+
+app.get("/",(req,res)=>{ // for root route 
+  List.find({},(err,data)=>{
+    if(data.length === 0){
+      res.render("homie");
+    }else{
+      res.render("home",{post : data});
     }
   });
 });
-app.post("/",(req,res)=>{
-  const a = req.body.name_inp;
-  const b = items;
-  var obj = {
-    title : a,
-    content : b
-  }
-  posts.push(obj);
-  res.redirect("/");
+
+app.get("/todoName",(req,res)=>{
+  res.render("todoName")
 });
 
-                                // Second half of the Scene Starts from here
-app.get("/todopost",(req,res)=>{
-  res.render("list2",{listTitle: "Your To-Do List", newListItems: items});
+app.post("/todoList",(req,res)=>{
+  const Name = req.body.name_inp;
+  res.redirect("/" + Name);
 });
-app.post("/todopost",(req,res)=>{
-  var newitem = req.body.newItem;
-  items.push(newitem);
-  res.redirect("/todopost");
+
+app.get("/:topic",(req,res)=>{
+  const topic = req.params.topic;
+  
+  List.findOne({name : topic },(err,data)=>{
+    if(!data){
+      const cList = new List({
+        name : topic,
+        item : []
+      });
+      cList.save();
+      res.redirect("/" + topic);
+    }
+    else{
+      if(err){console.log(err);}
+      else{
+        res.render("list2",{listTitle: data.name, newListItems: data.item});
+      }
+    }
+  });
 });
+
+// to add element
+app.post("/storeHouse",(req,res)=>{
+  const val_1 = req.body.newItem;
+  const val_2 = req.body.list;
+  List.findOne({name : val_2 },(err,data)=>{
+    data.item.push(val_1);
+    data.save();
+    res.redirect("/"+val_2);
+  });
+});
+
+// to delete element
+app.post("/dele",(req,res)=>{
+  var me = req.body.chkbox;
+  var hid = req.body.hiddenInp;
+      List.findOneAndUpdate({name : hid},{$pull : {item : me}},(err)=>{
+        if(err){
+          console.log(err);
+        }else{
+          res.redirect("/"+hid)
+        }
+      });
+});
+
+// app.get("/todoList",(req,res)=>{
+//   res.render("list2",{listTitle: "affe", newListItems: arr});
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.listen(3000, function() {

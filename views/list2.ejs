@@ -1,24 +1,25 @@
 <%- include("partials/header2") -%>
 
+<a href="/" class="btn"><i class="fa-sharp fa-solid fa-house"></i></a>
+
   <div class="box" id="heading">
     <h1> <%= listTitle %> </h1>
   </div>
 
   <div class="box">
-    <% for (let i=0; i<newListItems.length; i++) { %>
-      <div class="item">
-        <input type="checkbox">
-        <p><%=  newListItems[i]  %></p>
-      </div>
-      <% } %>
-
-      <form class="item" action="/todopost" method="post">
-        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
-        <button type="submit" name="list">+</button>
+    <% newListItems.forEach((data)=>{ %>
+      <form action="/dele" method="post">
+        <div class="item">
+          <input type="hidden" name="hiddenInp" value="<%= listTitle %>">
+          <input type="checkbox" name="chkbox" value="<%= data%>"  onChange="this.form.submit()">
+          <p><%=  data  %></p>
+        </div> 
       </form>
-      <form action="/" method="post" class="bottomform">
-        <input type="text" placeholder="Enter your name" autocomplete="off" name="name_inp">
-        <button type="submit">ok</button>
+      <% }) %>
+
+      <form class="item" action="/storeHouse" method="post" id="farm">
+        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+        <button type="submit" name="list" value="<%= listTitle %>">+</button>
       </form>
   </div>
 
