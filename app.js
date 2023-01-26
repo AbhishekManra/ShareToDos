@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
+require('dotenv').config()
 const mongoose = require("mongoose");
 
 function reload(){
@@ -15,7 +16,9 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect('mongodb://127.0.0.1:27017/DBlogToDo');
+mongoose.connect(process.env.MAIN);
+// mongoose.connect('mongodb://127.0.0.1:27017/DBlogToDo');
+
 
 const arr = [];
 
